@@ -6,6 +6,7 @@ import { Button } from './components/Button';
 import { InfoItem } from './components/InfoItem';
 import { GridItemType } from './types/GridItemType';
 import { itens } from './data/items'
+import { GridItem } from './components/GridItem';
 
 const App = () => {
   const [playing, Setplaying] = useState<boolean>(false);
@@ -25,18 +26,30 @@ const App = () => {
 
     // passo 2 - criar o grid
     // 2.1 - criar um grid vazio
-    let tmpGrid: GridItemType[] = [];
-    for( let i = 0; i < (itens.length * 2); i++) {tmpGrid.push({
+    const tmpGrid: GridItemType[] = [];
+    for( let i = 0; i < (itens.length * 2); i++) tmpGrid.push({
       item: null,shown: false,permanentShown: false
-    })};
+    });
     //2.2 - preencher o grid
-
+    for(let w=0; w<2; w++){
+      for(let i = 0; i < itens.length; i++){
+       let pos = -1;
+       while (pos < -1 || tmpGrid[pos].item !== null){
+        pos = Math.floor(Math.random() * (itens.length * 2)) 
+       }
+       tmpGrid[pos].item = 1;
+      }
+    }
     //2.3 - jogar no state
     SetGridItems(tmpGrid);
-
+    
     // passo 3 - começar o jogo
     Setplaying(true);
+  }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const handleItemClick = (index:number) => {
+    
   }
 
   return (
@@ -55,14 +68,16 @@ const App = () => {
       </C.Info>
       <C.GridArea>
         <C.Grid>
-
+          {gridItems.map((item, index) =>(
+            <GridItem 
+              key={index}
+              item={item}
+              onClick={()=> handleItemClick(index)}
+            />
+          ))}
         </C.Grid>
       </C.GridArea>
     </C.Container>
-      
-
-      
-  
   );
 }
 
