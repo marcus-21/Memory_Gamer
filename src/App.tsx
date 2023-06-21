@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react'
 import * as C from './App.styles';
 import logoImage from './assets/devmemory_logo.png'
 import RestartIcon from './svgs/restart.svg'
-import { Button } from './components/Button';
-import { InfoItem } from './components/InfoItem';
+import { Button } from './components/Button/index';
+import { InfoItem } from './components/InfoItem/index';
 import { GridItemType } from './types/GridItemType';
-import { itens } from './data/items'
-import { GridItem } from './components/GridItem';
+import { items } from './data/items'
+import { GridItem } from './components/GridItem/index';
 import { formatTimeElapsed } from './helpers/formatTimeElapsed';
 
 const App = () => {
-  const [playing, Setplaying] = useState<boolean>(false);
+  const [playing, setPlaying] = useState<boolean>(false);
   const [timeElapsed, setTimeElapsed] = useState<number>(0);
   const [moveCount, setMoveCount] = useState<number>(0);
   const [shownCount, setShownCount] = useState<number>(0);
@@ -34,7 +34,6 @@ const App = () => {
     if(shownCount === 2){
       let opened = gridItems.filter(item => item.shown === true);
       if(opened.length === 2){
-
         if(opened[0].item === opened[1].item){
           let tmpGrid = [...gridItems];
           for(let i in tmpGrid){
@@ -62,7 +61,7 @@ const App = () => {
 
   useEffect(()=>{
     if(moveCount > 0 && gridItems.every(item => item.permanentShown === true)){
-      Setplaying(false);
+      setPlaying(false);
     }
   },[moveCount, gridItems])
 
@@ -74,32 +73,32 @@ const App = () => {
 
     // passo 2 - criar o grid
     // 2.1 - criar um grid vazio
-    const tmpGrid: GridItemType[] = [];
-    for( let i = 0; i < (itens.length * 2); i++) tmpGrid.push({
-      item: null,shown: false,permanentShown: false
+    let tmpGrid: GridItemType[] = [];
+    for( let i = 0; i < (items.length * 2); i++) tmpGrid.push({
+      item: null, shown: false, permanentShown: false
     });
     //2.2 - preencher o grid
-    for(let w=0; w<2; w++){
-      for(let i = 0; i < itens.length; i++){
+    for(let w = 0; w < 2; w++){
+      for(let i = 0; i < items.length; i++){
        let pos = -1;
-       while (pos < -1 || tmpGrid[pos].item !== null){
-        pos = Math.floor(Math.random() * (itens.length * 2)) 
+       while (pos < 0 || tmpGrid[pos].item !== null){
+        pos = Math.floor(Math.random() * (items.length * 2)) 
        }
-       tmpGrid[pos].item = 1;
+       tmpGrid[pos].item = i;
       }
     }
     //2.3 - jogar no state
     setGridItems(tmpGrid);
     
     // passo 3 - começar o jogo
-    Setplaying(true);
+    setPlaying(true);
   }
 
   const handleItemClick = (index:number) => {
     if(playing && index !== null && shownCount < 2){
       let tmpGrid = [...gridItems];
 
-      if(tmpGrid[index].permanentShown === false && tmpGrid[index].shown ===false){
+      if(tmpGrid[index].permanentShown === false && tmpGrid[index].shown === false){
         tmpGrid[index].shown = true;
         setShownCount(shownCount + 1);
       }
